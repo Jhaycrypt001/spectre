@@ -11,7 +11,7 @@ import { Logo } from "@/components/landing/logo";
  */
 
 const EXPLORER_BASE = "https://testnet.cspr.live";
-const REPO_URL = "https://github.com/spectre-market/spectre";
+const REPO_URL = "https://github.com/Jhaycrypt001/spectre";
 
 const GROUPS = [
   {
