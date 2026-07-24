@@ -13,13 +13,34 @@
  * copies are safe to bundle unchanged.
  */
 
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const agentSrc = resolve(here, "..", "..", "agent", "src");
 const outDir = resolve(here, "..", "lib", "agent-vendored");
+
+// On a web-only deploy (e.g. Vercel with root = web/), the agent source one level up
+// is not present. The vendored copies are committed, so fall back to them rather than
+// crashing the build — but only if they already exist; a genuinely missing decoder
+// should still fail loudly during local development where the agent *is* present.
+if (!existsSync(agentSrc)) {
+  const missing = ["events.ts", "meter-types.ts"].filter(
+    (f) => !existsSync(resolve(here, "..", "lib", "agent-vendored", f)),
+  );
+  if (missing.length > 0) {
+    console.error(
+      `sync-agent: agent source not found at ${agentSrc} and vendored copies ` +
+        `are missing: ${missing.join(", ")}. Cannot continue.`,
+    );
+    process.exit(1);
+  }
+  console.log(
+    "sync-agent: agent source not present; using committed vendored copies.",
+  );
+  process.exit(0);
+}
 
 /** Files to vendor, and the export surface each is relied on for. */
 const files = [
