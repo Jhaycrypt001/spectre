@@ -1,0 +1,10 @@
+{
+  "chainName": "casper-test",
+  "rpcUrl": "https://node.testnet.casper.network/rpc",
+  "packageHash": "ff28f7daff1725bc374696db6b5aa721a580e73d36d0a89adf906df32e3f51b9",
+  "contractHash": "fcec0112055f7606cba2755c72d0461ca30aa82a7c6ba740255a32eb7e60af38",
+  "installTxHash": "270224582c57e2ecf7d31ae18d5c4f512c3993692a92b20327d20f742cb89db4",
+  "installedAt": "2026-07-24T18:53:20.510Z",
+  "deployer": "02021629612fdf2a1feb43f977e76a77068a1b546cfe5284f4fcf2600d0ceb356ad4",
+  "wasmBytes": 353280
+}

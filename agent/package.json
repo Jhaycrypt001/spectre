@@ -1,0 +1,29 @@
+{
+  "name": "spectre-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Autonomous dispatch agent for the Spectre market on Casper",
+  "scripts": {
+    "feeds": "tsx src/scripts/check-feeds.ts",
+    "build": "tsc --noEmit",
+    "sim": "tsx src/scripts/check-sim.ts",
+    "plan": "tsx src/scripts/check-planner.ts",
+    "test": "tsx --test src/**/*.test.ts",
+    "check:chain": "tsx src/scripts/check-chain.ts",
+    "install:contract": "tsx src/scripts/install.ts",
+    "resolve": "tsx src/scripts/resolve.ts",
+    "dispatch": "tsx src/scripts/dispatch.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "tsx": "^4.23.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "casper-js-sdk": "^5.0.12"
+  }
+}

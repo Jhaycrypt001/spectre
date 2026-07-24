@@ -1,0 +1,9 @@
+# Casper's WASM runtime does not implement the bulk-memory proposal.
+# Recent Rust toolchains emit memory.copy / memory.fill by default, which the node
+# rejects at deploy time with:
+#   Wasm preprocessing error: Deserialization error: Bulk memory operations are not supported
+# Disabling the target features makes the compiler lower those to plain loops.
+[target.wasm32-unknown-unknown]
+rustflags = [
+  "-C", "target-feature=-bulk-memory,-nontrapping-fptoint,-sign-ext",
+]

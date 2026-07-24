@@ -1,0 +1,28 @@
+# Secrets — never commit
+keys/
+*.pem
+*.key
+.env
+.env.*
+!.env.example
+
+# Rust
+target/
+**/target/
+
+# Node
+node_modules/
+**/node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# `agent/deployment.json` is deliberately NOT ignored. It records the deployed
+# contract address on Casper testnet, which is public information and is what both
+# the agent and the frontend read to find the contract. Ignoring it would leave a
+# fresh clone unable to reach the deployment.
+
+# OS
+.DS_Store
+Thumbs.db
