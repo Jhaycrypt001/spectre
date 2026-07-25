@@ -2,14 +2,17 @@ import type { NextConfig } from "next";
 import path from "node:path";
 
 const nextConfig: NextConfig = {
-  // NOTE: casper-js-sdk is deliberately NOT in `serverExternalPackages`. Externalizing
-  // it made Turbopack wrap it in an `[externals]` resolver that honours the package's
-  // `browser` condition even on the server — loading the browser build (lib.web.js),
-  // whose HTTP layer rejects the testnet node's responses with a spurious "413 Payload
-  // Too Large". Instead the SDK is loaded through a runtime Node `require` in
-  // lib/chain/casper-sdk.ts (via `process.getBuiltinModule`), invisible to the bundler,
-  // so Node's own resolver picks the Node build. Listing it as external would give
-  // Turbopack a specifier to pre-resolve and reintroduce the browser build.
+  // casper-js-sdk must be handled by native Node `require`, never bundled. Node's
+  // resolver applies the package's `require` export condition and picks the Node
+  // build (dist/lib.node.js) — verified with `require.resolve`. Only a *bundler*
+  // applying the `browser`/`react-native` condition would select the browser build
+  // (lib.web.js), whose HTTP layer spuriously 413s the testnet node. Declaring the
+  // package external here keeps it out of the bundle AND, critically, makes Next's
+  // output-file tracer follow its real dependency graph so every transitive
+  // dependency is copied into the serverless function on Vercel. Without this the
+  // runtime require threw "Cannot find module" at module load and the /api/market
+  // route returned an HTML crash page ("Unexpected token <") instead of JSON.
+  serverExternalPackages: ["casper-js-sdk"],
   turbopack: {
     // An unrelated package-lock.json in the parent home directory otherwise makes
     // Next.js infer the workspace root one level too high, which hoists this
