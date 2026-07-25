@@ -32,27 +32,21 @@
 
 import "server-only";
 
-// Obtain a real Node `require` without an import statement the bundler can trace or
-// rewrite. Two ways to reach the built-in `module`, tried in order so this works across
-// Node versions and hosts (local Windows/Turbopack *and* Vercel's Linux runtime):
+// casper-js-sdk is declared in `serverExternalPackages` (next.config.ts), so Next
+// never bundles it: it is handed to native Node resolution. The package is CommonJS
+// with an `exports` map whose conditions are `require`/`default` -> lib.node.js and
+// only `browser`/`react-native` -> lib.web.js. A server-side import therefore
+// resolves to the Node build (lib.node.js) — the browser build, whose HTTP layer
+// spuriously 413s the testnet node, is never selected on the server. Confirmed with
+// `require.resolve("casper-js-sdk")` -> dist/lib.node.js.
 //
-//   1. `process.getBuiltinModule("module")` — Node 22+, cleanest, no import.
-//   2. `eval("require")("module")` — older Node / any runtime; the eval keeps the
-//      specifier opaque to Turbopack so it is not rewritten to the browser build.
-//
-// The require's base is `import.meta.url` (this file), not `process.cwd()`, because the
-// working directory is not stable on serverless hosts — resolving relative to this
-// module's own location finds the co-located node_modules reliably.
-function nodeCreateRequire(): NodeRequire {
-  const mod =
-    typeof process.getBuiltinModule === "function"
-      ? process.getBuiltinModule("module")
-      : // eslint-disable-next-line no-eval
-        (eval("require") as NodeRequire)("module");
-  return (mod as typeof import("module")).createRequire(import.meta.url);
-}
-
-const sdk = nodeCreateRequire()("casper-js-sdk") as typeof import("casper-js-sdk");
+// Earlier this module reached for a runtime `createRequire(import.meta.url)` to dodge
+// the bundler's `browser` condition. That is what `serverExternalPackages` now does
+// declaratively; the manual require additionally broke on Vercel, where the emitted
+// module's `import.meta.url` did not line up with the traced node_modules and the
+// require threw at module load (an HTML 500, before the route's try/catch). A plain
+// static import is both correct and robust.
+import sdk from "casper-js-sdk";
 
 export const { HttpHandler, RpcClient } = sdk;
 export default sdk;
