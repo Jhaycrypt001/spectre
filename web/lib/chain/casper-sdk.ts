@@ -32,14 +32,27 @@
 
 import "server-only";
 
-// `process.getBuiltinModule` (Node 22+) hands back the built-in `module` with no import
-// for the bundler to see or rewrite. Bound to the app's working directory (this web/
-// project) so package resolution starts from its node_modules.
-const nodeRequire = process
-  .getBuiltinModule("module")
-  .createRequire(process.cwd() + "/");
+// Obtain a real Node `require` without an import statement the bundler can trace or
+// rewrite. Two ways to reach the built-in `module`, tried in order so this works across
+// Node versions and hosts (local Windows/Turbopack *and* Vercel's Linux runtime):
+//
+//   1. `process.getBuiltinModule("module")` — Node 22+, cleanest, no import.
+//   2. `eval("require")("module")` — older Node / any runtime; the eval keeps the
+//      specifier opaque to Turbopack so it is not rewritten to the browser build.
+//
+// The require's base is `import.meta.url` (this file), not `process.cwd()`, because the
+// working directory is not stable on serverless hosts — resolving relative to this
+// module's own location finds the co-located node_modules reliably.
+function nodeCreateRequire(): NodeRequire {
+  const mod =
+    typeof process.getBuiltinModule === "function"
+      ? process.getBuiltinModule("module")
+      : // eslint-disable-next-line no-eval
+        (eval("require") as NodeRequire)("module");
+  return (mod as typeof import("module")).createRequire(import.meta.url);
+}
 
-const sdk = nodeRequire("casper-js-sdk") as typeof import("casper-js-sdk");
+const sdk = nodeCreateRequire()("casper-js-sdk") as typeof import("casper-js-sdk");
 
 export const { HttpHandler, RpcClient } = sdk;
 export default sdk;
