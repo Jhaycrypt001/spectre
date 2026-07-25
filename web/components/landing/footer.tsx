@@ -11,6 +11,8 @@ import { Logo } from "@/components/landing/logo";
  */
 
 const EXPLORER_BASE = "https://testnet.cspr.live";
+const CONTRACT_HASH =
+  "fcec0112055f7606cba2755c72d0461ca30aa82a7c6ba740255a32eb7e60af38";
 const REPO_URL = "https://github.com/Jhaycrypt001/spectre";
 
 const GROUPS = [
@@ -26,7 +28,11 @@ const GROUPS = [
   {
     heading: "Chain",
     links: [
-      { label: "Contract", href: `${EXPLORER_BASE}`, external: true },
+      {
+        label: "Contract",
+        href: `${EXPLORER_BASE}/contract/${CONTRACT_HASH}`,
+        external: true,
+      },
       { label: "Casper testnet", href: "https://testnet.cspr.live", external: true },
       { label: "Casper docs", href: "https://docs.casper.network", external: true },
     ],

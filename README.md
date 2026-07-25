@@ -13,8 +13,8 @@ Spectre removes the trusted middleman. An autonomous agent decides what to curta
 the **contract itself** computes the reduction and pays the household directly. Every
 payout is recomputable from chain data by anyone.
 
-- **Live contract:** [`67665d39…6ab9600d`](https://testnet.cspr.live/contract/67665d390334717f3820cf732fadd86661a5f188bcc9137a32869f196ab9600d) on Casper testnet
-- **Dashboard:** `/dashboard` — reads the live contract, every figure decoded from an emitted event
+- **Live dashboard:** <https://spectre-wine-phi.vercel.app/dashboard> — reads the live contract, every figure decoded from an emitted event
+- **Live contract:** [`fcec0112…e7e60af38`](https://testnet.cspr.live/contract/fcec0112055f7606cba2755c72d0461ca30aa82a7c6ba740255a32eb7e60af38) on Casper testnet
 
 ## The hard part: proving a negawatt
 
