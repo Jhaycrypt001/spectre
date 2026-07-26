@@ -2,6 +2,27 @@
 
 **A verifiable market for household demand reduction, settled on Casper.**
 
+> ### In 30 seconds
+>
+> Grid operators pay households to *use less* power during peak windows. Today that market
+> is locked to big aggregators because verifying and paying one home costs more than the
+> payment. **Spectre** replaces the aggregator with an **autonomous agent** + a **Casper
+> smart contract**: the agent picks what to curtail against live grid prices, the home
+> commits a sealed baseline, and the **contract itself** recomputes the reduction and pays
+> the home — every payout independently recomputable from chain data.
+>
+> | | |
+> |---|---|
+> | 🌐 **Live dashboard** | <https://spectre-wine-phi.vercel.app/dashboard> |
+> | ⛓️ **Live contract** | [`fcec0112…af38`](https://testnet.cspr.live/contract/fcec0112055f7606cba2755c72d0461ca30aa82a7c6ba740255a32eb7e60af38) · Casper testnet |
+> | 📖 **Docs** | [`docs/index.html`](docs/index.html) — open in a browser, or [read online](https://claude.ai/code/artifact/7690a5f9-6e1c-48b0-b552-c7e59e2ad0e3) |
+> | 🧩 **Three parts** | `contracts/` Odra/Rust · `agent/` TypeScript dispatch agent · `web/` Next.js dashboard |
+> | ✅ **Verify it yourself** | Baseline **2,996 Wh** − actual **1,033** = delivered **1,963 Wh** × **2 CSPR/kWh** = **3.926 CSPR** paid — the exact numbers on the live contract |
+>
+> **The one hard idea:** you can't meter power that was *never used*, so payment rests on a
+> baseline the home could cheat. Spectre defeats that with **commit-reveal on chain** — the
+> home seals its baseline hash *before* the window opens and can't revise history.
+
 Grid operators pay for demand *reduction* — a negawatt. It is a real, regulated market,
 and households are locked out of it. Not for technical reasons: a single home's
 contribution to a dispatch window is worth roughly £0.20–£1.50, and the cost to verify,
@@ -39,7 +60,7 @@ recompute the whole settlement from chain data alone.
 
 ## A settlement that actually happened
 
-Event `evt-mrwwzj81`, decoded from the contract's own event log:
+Event `evt-mrzav0zg`, decoded from the contract's own event log:
 
 | Step                      | Value       |
 | ------------------------- | ----------- |
