@@ -234,6 +234,14 @@
   }
   body {
     @apply bg-background text-foreground;
+    /*
+     * Never allow the page to scroll horizontally on narrow viewports: any single
+     * element that overshoots the viewport width (a long unbroken hash, a wide grid)
+     * is clipped rather than dragging the whole document sideways. `clip` is used in
+     * preference to `hidden` because it does not create a scroll container, so the
+     * navbar's `position: fixed` and any `sticky` sections keep working.
+     */
+    overflow-x: clip;
   }
   html {
     @apply font-sans;
