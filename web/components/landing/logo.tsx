@@ -21,11 +21,12 @@ export function Logo({ className }: { className?: string }) {
       )}
       style={{
         backgroundImage: "url(/brand/spectre-logo.png)",
-        // The S is ~27.4% wide / ~35.7% tall of the source. Zoom so it fills ~66% of the
-        // chip's height: 100% / 0.357 * 0.66 ≈ 185% along the tighter (vertical) axis.
-        backgroundSize: "auto 185%",
-        // Center of the S is at ~49.9% x, ~43.1% y of the image.
-        backgroundPosition: "49.9% 40%",
+        // Measured S bounding box in the source: x 36.2–63.6%, y 25.3–61.0%
+        // (27.4% wide, 35.7% tall), centred at 49.9% / 43.1%. To frame just the S,
+        // scale the image so its taller axis (35.7%) plus a little padding fills the
+        // chip: 100% / (0.357 × 1.16) ≈ 241%, then centre on the S.
+        backgroundSize: "241%",
+        backgroundPosition: "49.9% 43.1%",
         backgroundRepeat: "no-repeat",
       }}
     />
