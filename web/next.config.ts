@@ -13,6 +13,14 @@ const nextConfig: NextConfig = {
   // runtime require threw "Cannot find module" at module load and the /api/market
   // route returned an HTML crash page ("Unexpected token <") instead of JSON.
   serverExternalPackages: ["casper-js-sdk"],
+
+  // The documentation is a self-contained static page (public/docs.html) with its own
+  // theme toggle and scroll-spy. Serve it at the clean URL /docs so it lives on this
+  // domain rather than an off-site link, without dragging its bespoke styling through
+  // the app's React shell.
+  async rewrites() {
+    return [{ source: "/docs", destination: "/docs.html" }];
+  },
   turbopack: {
     // An unrelated package-lock.json in the parent home directory otherwise makes
     // Next.js infer the workspace root one level too high, which hoists this

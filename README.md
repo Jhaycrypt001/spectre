@@ -15,7 +15,7 @@
 > |---|---|
 > | 🌐 **Live dashboard** | <https://spectre-wine-phi.vercel.app/dashboard> |
 > | ⛓️ **Live contract** | [`fcec0112…af38`](https://testnet.cspr.live/contract/fcec0112055f7606cba2755c72d0461ca30aa82a7c6ba740255a32eb7e60af38) · Casper testnet |
-> | 📖 **Docs** | [`docs/index.html`](docs/index.html) — open in a browser, or [read online](https://claude.ai/code/artifact/7690a5f9-6e1c-48b0-b552-c7e59e2ad0e3) |
+> | 📖 **Docs** | <https://spectre-wine-phi.vercel.app/docs> (source: [`web/public/docs.html`](web/public/docs.html)) |
 > | 🧩 **Three parts** | `contracts/` Odra/Rust · `agent/` TypeScript dispatch agent · `web/` Next.js dashboard |
 > | ✅ **Verify it yourself** | Baseline **2,996 Wh** − actual **1,033** = delivered **1,963 Wh** × **2 CSPR/kWh** = **3.926 CSPR** paid — the exact numbers on the live contract |
 >

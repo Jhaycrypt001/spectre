@@ -14,8 +14,6 @@ const EXPLORER_BASE = "https://testnet.cspr.live";
 const CONTRACT_HASH =
   "fcec0112055f7606cba2755c72d0461ca30aa82a7c6ba740255a32eb7e60af38";
 const REPO_URL = "https://github.com/Jhaycrypt001/spectre";
-const DOCS_URL =
-  "https://claude.ai/code/artifact/7690a5f9-6e1c-48b0-b552-c7e59e2ad0e3";
 
 const GROUPS = [
   {
@@ -42,7 +40,7 @@ const GROUPS = [
   {
     heading: "Project",
     links: [
-      { label: "Docs", href: DOCS_URL, external: true },
+      { label: "Docs", href: "/docs" },
       { label: "Source", href: REPO_URL, external: true },
       { label: "FAQ", href: "/#faq" },
     ],

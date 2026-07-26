@@ -1,0 +1,481 @@
+<title>Spectre Docs · verifiable demand-reduction market on Casper</title>
+<link rel="icon" href="/icon.png" type="image/png" />
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #09090b;
+    --card: #fafafa;
+    --muted: #52525b;
+    --muted-2: #71717a;
+    --border: #e4e4e7;
+    --border-strong: #d4d4d8;
+    --primary: #0284c7;
+    --primary-ink: #075985;
+    --success: #059669;
+    --success-bg: #05966912;
+    --code-bg: #f4f4f5;
+    --rail-active: #0284c70f;
+    --radius: 0.625rem;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo, Consolas, monospace;
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #09090b;
+      --fg: #fafafa;
+      --card: #141416;
+      --muted: #a1a1a1;
+      --muted-2: #8b8b8f;
+      --border: #ffffff1a;
+      --border-strong: #ffffff2a;
+      --primary: #00a5ef;
+      --primary-ink: #7dd3fc;
+      --success: #34d399;
+      --success-bg: #34d39914;
+      --code-bg: #1c1c1f;
+      --rail-active: #00a5ef14;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #ffffff; --fg: #09090b; --card: #fafafa; --muted: #52525b; --muted-2: #71717a;
+    --border: #e4e4e7; --border-strong: #d4d4d8; --primary: #0284c7; --primary-ink: #075985;
+    --success: #059669; --success-bg: #05966912; --code-bg: #f4f4f5; --rail-active: #0284c70f;
+  }
+  :root[data-theme="dark"] {
+    --bg: #09090b; --fg: #fafafa; --card: #141416; --muted: #a1a1a1; --muted-2: #8b8b8f;
+    --border: #ffffff1a; --border-strong: #ffffff2a; --primary: #00a5ef; --primary-ink: #7dd3fc;
+    --success: #34d399; --success-bg: #34d39914; --code-bg: #1c1c1f; --rail-active: #00a5ef14;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+
+  /* ---- top bar ---- */
+  header.topbar {
+    position: sticky; top: 0; z-index: 40;
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    height: 4rem; padding: 0 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(12px);
+  }
+  .brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 640; letter-spacing: -0.01em; }
+  .brand .glyph {
+    width: 1.5rem; height: 1.5rem; border-radius: 6px; flex: none;
+    background: #ffffff; box-shadow: inset 0 0 0 1px #00000018, 0 1px 2px #0000000f;
+    /* The brand PNG is the full lockup; frame just the S (bbox centred 49.9%/43.1%,
+       scaled to 241% so its taller axis fills the chip) — same crop as the site nav. */
+    background-image: url(/brand/spectre-logo.png);
+    background-size: 241%;
+    background-position: 49.9% 43.1%;
+    background-repeat: no-repeat;
+  }
+  .brand small { color: var(--muted); font-weight: 500; letter-spacing: 0.02em; }
+  .topbar-links { display: flex; align-items: center; gap: 0.35rem; }
+  .topbar-links a, .theme-btn {
+    font-size: 0.8rem; color: var(--muted); text-decoration: none;
+    padding: 0.45rem 0.7rem; border-radius: 0.5rem; border: 1px solid transparent;
+    background: none; font-family: inherit; cursor: pointer; transition: color .15s, border-color .15s, background .15s;
+  }
+  .topbar-links a:hover, .theme-btn:hover { color: var(--fg); border-color: var(--border); background: var(--card); }
+  .topbar-links a.primary { color: var(--primary-ink); border-color: color-mix(in srgb, var(--primary) 40%, transparent); }
+  .topbar-links a.primary:hover { background: var(--rail-active); }
+  @media (max-width: 720px) { .topbar-links a.hide-sm { display: none; } }
+
+  /* ---- shell ---- */
+  .shell { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 2.5rem; max-width: 1160px; margin: 0 auto; padding: 0 1.25rem; }
+  @media (max-width: 900px) { .shell { grid-template-columns: 1fr; gap: 0; } }
+
+  /* ---- side rail ---- */
+  nav.rail { position: sticky; top: 4rem; align-self: start; height: calc(100vh - 4rem); overflow-y: auto; padding: 2rem 0.5rem 2rem 0; }
+  @media (max-width: 900px) {
+    nav.rail { position: static; height: auto; border-bottom: 1px solid var(--border); padding: 1rem 0; margin-bottom: 1rem;
+      display: flex; gap: 0.35rem; overflow-x: auto; }
+  }
+  .rail .group-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted-2); margin: 1.4rem 0 0.5rem 0.75rem; font-weight: 600; }
+  .rail .group-label:first-child { margin-top: 0; }
+  @media (max-width: 900px) { .rail .group-label { display: none; } }
+  .rail a {
+    display: block; padding: 0.34rem 0.75rem; border-radius: 0.45rem;
+    color: var(--muted); text-decoration: none; font-size: 0.875rem; line-height: 1.5;
+    border-left: 2px solid transparent; transition: color .12s, background .12s;
+    white-space: nowrap;
+  }
+  .rail a:hover { color: var(--fg); }
+  .rail a.active { color: var(--primary-ink); background: var(--rail-active); border-left-color: var(--primary); font-weight: 550; }
+  @media (max-width: 900px) { .rail a { border-left: none; border: 1px solid var(--border); } .rail a.active { border-color: color-mix(in srgb, var(--primary) 40%, transparent); } }
+
+  /* ---- content ---- */
+  main { padding: 2.75rem 0 6rem; min-width: 0; }
+  .lede { max-width: 70ch; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted-2); font-weight: 600; }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px var(--success-bg); }
+  h1 { font-size: clamp(2rem, 5vw, 2.7rem); line-height: 1.08; letter-spacing: -0.03em; margin: 0.7rem 0 0.6rem; text-wrap: balance; font-weight: 680; }
+  .subtitle { font-size: 1.1rem; color: var(--muted); margin: 0 0 1.5rem; max-width: 64ch; }
+  section { max-width: 72ch; padding-top: 2.5rem; margin-top: 1rem; scroll-margin-top: 5rem; }
+  section > h2 {
+    font-size: 1.45rem; letter-spacing: -0.02em; margin: 0 0 0.4rem; font-weight: 640;
+    padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+  }
+  section h3 { font-size: 1.05rem; letter-spacing: -0.01em; margin: 1.9rem 0 0.4rem; font-weight: 620; }
+  p { margin: 0.7rem 0; }
+  a.inline { color: var(--primary-ink); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--primary) 35%, transparent); }
+  a.inline:hover { border-bottom-color: var(--primary); }
+  strong { font-weight: 640; }
+  ol, ul { padding-left: 1.25rem; margin: 0.7rem 0; }
+  li { margin: 0.3rem 0; }
+  code { font-family: var(--mono); font-size: 0.86em; background: var(--code-bg); padding: 0.12em 0.4em; border-radius: 5px; border: 1px solid var(--border); }
+
+  /* verify callout */
+  .verify {
+    display: grid; gap: 0.5rem; margin: 1.4rem 0;
+    padding: 1rem 1.15rem; border-radius: var(--radius);
+    background: var(--success-bg); border: 1px solid color-mix(in srgb, var(--success) 30%, transparent);
+  }
+  .verify .tag { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--success); font-weight: 700; display: flex; align-items: center; gap: 0.4rem; }
+  .verify .eq { font-family: var(--mono); font-size: 0.92rem; line-height: 1.7; font-variant-numeric: tabular-nums; }
+  .verify .eq b { color: var(--fg); }
+
+  /* cards row */
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.85rem; margin: 1.5rem 0; }
+  @media (max-width: 640px) { .cards { grid-template-columns: 1fr; } }
+  .card { border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.1rem; background: var(--card); }
+  .card .k { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted-2); font-weight: 600; }
+  .card .t { font-weight: 620; margin: 0.35rem 0 0.15rem; letter-spacing: -0.01em; }
+  .card p { font-size: 0.9rem; color: var(--muted); margin: 0.2rem 0 0; }
+  .card .mono { font-family: var(--mono); font-size: 0.82rem; color: var(--primary-ink); }
+
+  /* code block */
+  pre {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1rem 1.1rem; overflow-x: auto; margin: 1rem 0; line-height: 1.55;
+  }
+  pre code { background: none; border: none; padding: 0; font-size: 0.82rem; }
+  .cmt { color: var(--muted-2); }
+
+  /* settlement table */
+  .table-wrap { overflow-x: auto; margin: 1.2rem 0; border: 1px solid var(--border); border-radius: var(--radius); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+  th, td { text-align: left; padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); }
+  thead th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted-2); font-weight: 600; background: var(--card); }
+  tbody tr:last-child td { border-bottom: none; }
+  td.num { font-family: var(--mono); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr.total td { font-weight: 680; background: var(--rail-active); }
+  tr.total td.num { color: var(--primary-ink); }
+
+  .pill-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.2rem 0; }
+  .pill { font-size: 0.78rem; padding: 0.3rem 0.7rem; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); background: var(--card); }
+  .pill.ok { color: var(--success); border-color: color-mix(in srgb, var(--success) 30%, transparent); background: var(--success-bg); }
+  .pill.no { color: var(--muted-2); }
+
+  .callout { border-left: 3px solid var(--border-strong); padding: 0.2rem 0 0.2rem 1rem; margin: 1.2rem 0; color: var(--muted); font-size: 0.95rem; }
+
+  footer.docfoot { max-width: 72ch; margin: 3rem auto 0; padding: 2rem 1.25rem 4rem; color: var(--muted-2); font-size: 0.85rem; border-top: 1px solid var(--border); }
+  footer.docfoot a { color: var(--primary-ink); text-decoration: none; }
+
+  :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+</style>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="glyph" aria-hidden="true"></span>
+    Spectre <small>docs</small>
+  </div>
+  <div class="topbar-links">
+    <a class="hide-sm" href="/">Home</a>
+    <a class="hide-sm" href="/dashboard">Dashboard</a>
+    <a class="hide-sm" href="https://testnet.cspr.live/contract/fcec0112055f7606cba2755c72d0461ca30aa82a7c6ba740255a32eb7e60af38" target="_blank" rel="noopener">Contract ↗</a>
+    <a class="primary" href="https://github.com/Jhaycrypt001/spectre" target="_blank" rel="noopener">GitHub</a>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle theme">Theme</button>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="rail" aria-label="Documentation sections">
+    <div class="group-label">Start</div>
+    <a href="#overview" class="active">Overview</a>
+    <a href="#how-it-works">How it works</a>
+    <a href="#proving">Proving a negawatt</a>
+    <div class="group-label">Reference</div>
+    <a href="#settlement">Settlement math</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#api">The market API</a>
+    <a href="#run">Run it locally</a>
+    <div class="group-label">Notes</div>
+    <a href="#scope">Real vs. simulated</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+
+  <main>
+    <div class="lede">
+      <span class="eyebrow"><span class="dot"></span> Live on Casper testnet</span>
+      <h1>A verifiable market for household demand reduction.</h1>
+      <p class="subtitle">
+        An autonomous agent pledges household demand reduction against live grid prices, and a
+        Casper smart contract settles the payout — with every baseline and payment independently
+        recomputable from chain data.
+      </p>
+    </div>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Grid operators pay for demand <em>reduction</em> — a <strong>negawatt</strong>. It is a
+        real, regulated market, and households are locked out of it. Not for technical reasons: a
+        single home's contribution to a dispatch window is worth roughly £0.20–£1.50, and the cost
+        to verify, settle, and pay that exceeds the payment itself. Aggregators paper over this by
+        bundling thousands of homes under a manual contract — opaque revenue splits, and no way for
+        a household to audit what it was owed.
+      </p>
+      <p>
+        <strong>Spectre removes the trusted middleman.</strong> An autonomous agent decides what to
+        curtail, and the <strong>contract itself</strong> computes the reduction and pays the
+        household directly. Every payout is recomputable from chain data by anyone.
+      </p>
+      <div class="cards">
+        <div class="card">
+          <div class="k">Contract</div>
+          <div class="t">Odra / Rust</div>
+          <p>Market, sealed baseline, and on-chain settlement. 33 tests.</p>
+        </div>
+        <div class="card">
+          <div class="k">Agent</div>
+          <div class="t">TypeScript</div>
+          <p>Live price + carbon feeds, a deterministic planner, and the chain client.</p>
+        </div>
+        <div class="card">
+          <div class="k">Web</div>
+          <div class="t">Next.js</div>
+          <p>Landing page and a live dashboard that reads the deployed contract.</p>
+        </div>
+      </div>
+      <p class="callout">
+        Live contract <code>fcec0112…af38</code> on Casper testnet ·
+        <a class="inline" href="/dashboard">open the live dashboard</a>.
+      </p>
+    </section>
+
+    <section id="how-it-works">
+      <h2>How it works</h2>
+      <p>One dispatch cycle is five on-chain moves, driven end to end by the agent:</p>
+      <ol>
+        <li><strong>Register.</strong> A home is registered with its maximum curtailable load (e.g. 3,000 W).</li>
+        <li><strong>Commit.</strong> The home hashes its baseline intervals and commits <em>only the hash</em> on chain — before any window opens.</li>
+        <li><strong>Open.</strong> The agent reads live grid prices, picks the best dispatch window (e.g. 17:30–19:30 at 2 CSPR/kWh), and opens it with a funded budget.</li>
+        <li><strong>Pledge.</strong> The home pledges a reduction for the window, capped by its registered load.</li>
+        <li><strong>Settle.</strong> The home reveals its baseline; the contract rehashes it, recomputes the delivered reduction, and pays <code>delivered × price</code> — refunding the remainder to the buyer.</li>
+      </ol>
+      <p>
+        The agent's <em>decision</em> is deterministic integer arithmetic over live prices and a
+        thermal constraint, because it spends money and forfeits payment on error. A language model
+        is used only to <em>explain</em> that decision in plain language; nothing it returns feeds a
+        transaction, and the agent falls back to its own rationale if the model is unavailable.
+      </p>
+    </section>
+
+    <section id="proving">
+      <h2>Proving a negawatt</h2>
+      <p>
+        You cannot meter energy that was never consumed, so payment rests on a <strong>baseline</strong>
+        — an estimate of what the site <em>would</em> have drawn. That estimate is the attack
+        surface: a home that knows the formula can inflate its baseline on ordinary days, then
+        "reduce" to normal during an event and be paid for nothing. This is the central fraud in
+        demand response, and the reason the market is gated to trusted parties.
+      </p>
+      <p>The defence is <strong>commit-reveal, enforced on chain</strong>:</p>
+      <ol>
+        <li>The home commits the hash of its baseline intervals <strong>before</strong> any window opens. The numbers stay private and can no longer be changed.</li>
+        <li>At settlement the intervals are revealed; the contract rehashes and rejects any mismatch.</li>
+        <li>The contract — not an aggregator, not the agent — recomputes the CAISO 10-in-10 baseline, applies the day-of adjustment within a ±20% clamp, subtracts metered actual use, and pays <code>delivered × price</code>.</li>
+      </ol>
+      <p>
+        The home cannot revise history, the buyer cannot shave the payout, and a third party can
+        recompute the whole settlement from chain data alone.
+      </p>
+    </section>
+
+    <section id="settlement">
+      <h2>Settlement math</h2>
+      <p>
+        A real settlement, decoded from the contract's own event log (event <code>evt-mrzav0zg</code>).
+        Every figure below is a value the contract emitted — nothing is recomputed into agreement.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Step</th><th style="text-align:right">Value</th></tr></thead>
+          <tbody>
+            <tr><td>Unadjusted baseline</td><td class="num">3,745 Wh</td></tr>
+            <tr><td>Adjusted (−20%, clamped)</td><td class="num">2,996 Wh</td></tr>
+            <tr><td>Metered actual</td><td class="num">1,033 Wh</td></tr>
+            <tr><td>Delivered reduction</td><td class="num">1,963 Wh</td></tr>
+            <tr><td>Pledge (payment ceiling)</td><td class="num">2,700 Wh</td></tr>
+            <tr><td>Price</td><td class="num">2 CSPR/kWh</td></tr>
+            <tr class="total"><td>Paid to household</td><td class="num">3.926 CSPR</td></tr>
+            <tr><td>Refunded to buyer</td><td class="num">6.074 CSPR</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="verify">
+        <span class="tag">✓ recompute it yourself</span>
+        <span class="eq">2,996 − 1,033 = <b>1,963 Wh</b> = 1.963 kWh × 2 CSPR = <b>3.926 CSPR</b></span>
+        <span class="eq">10 − 3.926 = <b>6.074 CSPR</b> returned to the buyer</span>
+      </div>
+    </section>
+
+    <section id="architecture">
+      <h2>Architecture</h2>
+      <p>Three parts, one source of truth for how chain events are decoded.</p>
+      <h3>Contract — <code>contracts/spectre-market</code></h3>
+      <p>
+        An Odra (Rust) contract holding the market: asset registration, sealed baseline commitments,
+        dispatch windows, pledges, and settlement. The settlement logic — baseline recomputation,
+        the ±20% clamp, and <code>delivered × price</code> — lives here, not in the agent, so no
+        off-chain party can alter a payout.
+      </p>
+      <h3>Agent — <code>agent/</code></h3>
+      <p>
+        A TypeScript agent that pulls live Octopus Agile prices and National Grid carbon intensity,
+        runs a deterministic planner to choose a window, and drives the full lifecycle through a
+        Casper chain client that signs with a local key.
+      </p>
+      <h3>Web — <code>web/</code></h3>
+      <p>
+        A Next.js landing page and a read-only dashboard. The dashboard holds <strong>no signing
+        key</strong> — it only reads global state — and it reuses the agent's exact event decoder,
+        so the dashboard and the chain can never disagree about what a settlement says.
+      </p>
+    </section>
+
+    <section id="api">
+      <h2>The market API</h2>
+      <p>
+        The dashboard is backed by a single read-only endpoint that folds the contract's event log
+        into per-dispatch stories. It takes no input that reaches the chain and holds no key.
+      </p>
+      <pre><code><span class="cmt"># Live market state, read from the deployed contract</span>
+GET https://spectre-wine-phi.vercel.app/api/market
+
+<span class="cmt"># Bypass the 15s server cache for a fresh read</span>
+GET https://spectre-wine-phi.vercel.app/api/market?fresh=1</code></pre>
+      <p>The response carries the contract identity and a <code>market</code> object with assets, dispatches, settlements, and the raw decoded log:</p>
+      <pre><code>{
+  "contractHash": "fcec0112…af38",
+  "chainName": "casper-test",
+  "market": {
+    "eventCount": 6,
+    "assets": [ { "assetId": "site-…", "maxCurtailableW": 3000, … } ],
+    "dispatches": [ { "windowLabel": "17:30–19:30", "pricePerKwhCspr": 2,
+      "settlements": [ { "deliveredWh": 1963, "paidCspr": 3.926, … } ] } ]
+  }
+}</code></pre>
+    </section>
+
+    <section id="run">
+      <h2>Run it locally</h2>
+      <h3>Contract</h3>
+      <pre><code>cd contracts/spectre-market
+cargo odra test     <span class="cmt"># 33 tests</span>
+cargo odra build    <span class="cmt"># build the wasm</span></code></pre>
+      <h3>Agent</h3>
+      <p>Needs a Casper testnet key at <code>keys/testnet_secret_key.pem</code> (see <code>agent/.env.example</code>; every other value has a working default).</p>
+      <pre><code>cd agent
+npm install
+npm run feeds       <span class="cmt"># live Octopus Agile prices + grid carbon</span>
+npm run plan        <span class="cmt"># what the planner decides, and why</span>
+npm test
+npm run dispatch    <span class="cmt"># full lifecycle against Casper testnet</span></code></pre>
+      <h3>Web</h3>
+      <pre><code>cd web
+npm install
+npm run dev         <span class="cmt"># http://localhost:3000</span></code></pre>
+    </section>
+
+    <section id="scope">
+      <h2>Real vs. simulated</h2>
+      <p>Stated plainly, because the distinction matters:</p>
+      <div class="pill-row">
+        <span class="pill ok">Real · the contract &amp; every settlement on testnet</span>
+        <span class="pill ok">Real · Octopus Agile price feed</span>
+        <span class="pill ok">Real · National Grid carbon feed</span>
+        <span class="pill ok">Real · every transaction &amp; payout</span>
+        <span class="pill no">Simulated · household load</span>
+      </div>
+      <p>
+        There is no smart plug in this build. <code>SimulatedMeter</code> uses physics-based
+        appliance models (thermal mass, standing loss, duty cycle) behind a <code>Meter</code>
+        interface — so real hardware is a second implementation of that interface, not a rewrite.
+      </p>
+      <h3>Deliberately out of scope</h3>
+      <p>
+        No aggregator order book, no token (settlement is native CSPR), no reputation system, no
+        mobile app, and no real grid-operator integration — we are the buyer in this demo, and we
+        say so.
+      </p>
+    </section>
+
+    <section id="faq">
+      <h2>FAQ</h2>
+      <h3>What exactly is a negawatt?</h3>
+      <p>A watt of power <em>not</em> consumed during a dispatch window — demand reduction the grid pays for, exactly as it pays for generation.</p>
+      <h3>Why does the contract, not the agent, do settlement?</h3>
+      <p>So no off-chain party can choose the payout. The contract recomputes the baseline from the revealed history and pays <code>delivered × price</code>; the agent only initiates.</p>
+      <h3>Can the home cheat its baseline?</h3>
+      <p>No. It commits the baseline hash before the window opens and reveals only at settlement, where the contract rehashes and rejects any mismatch.</p>
+      <h3>Is a language model in the money path?</h3>
+      <p>Never. The planner's decision is deterministic integer arithmetic. A model only narrates the decision, and the agent falls back to its own rationale if the model is unavailable.</p>
+    </section>
+  </main>
+</div>
+
+<footer class="docfoot">
+  Spectre · a verifiable market for household demand reduction, settled on Casper. Built for the
+  Casper Agentic Buildathon 2026. ·
+  <a href="/">Live site</a> ·
+  <a href="https://github.com/Jhaycrypt001/spectre" target="_blank" rel="noopener">Source</a>
+</footer>
+
+<script>
+  // Theme toggle: stamp data-theme so it wins over the media query, both directions.
+  (function () {
+    var btn = document.getElementById("themeBtn");
+    var root = document.documentElement;
+    btn.addEventListener("click", function () {
+      var current = root.getAttribute("data-theme");
+      if (!current) {
+        current = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      root.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+    });
+  })();
+
+  // Scroll-spy: highlight the rail link for the section in view.
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll("nav.rail a"));
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute("href").slice(1)] = a; });
+    var sections = links.map(function (a) { return document.getElementById(a.getAttribute("href").slice(1)); }).filter(Boolean);
+
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          links.forEach(function (l) { l.classList.remove("active"); });
+          var a = map[e.target.id];
+          if (a) a.classList.add("active");
+        }
+      });
+    }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+
+    sections.forEach(function (s) { obs.observe(s); });
+  })();
+</script>
