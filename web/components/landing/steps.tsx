@@ -9,7 +9,7 @@ const STEPS = [
   {
     n: "01",
     title: "Register a home and commit a baseline",
-    body: "A household registers its meter and the ceiling it can curtail. Before each window, its agent commits a hash of the baseline it expects to consume — locked in advance, revealed only at settlement.",
+    body: "A household registers its meter and the ceiling it can curtail. Before each window, its agent commits a hash of the baseline it expects to consume: locked in advance, revealed only at settlement.",
     tags: ["AssetRegistered", "BaselineCommitted"],
   },
   {

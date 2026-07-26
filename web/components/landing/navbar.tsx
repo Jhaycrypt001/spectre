@@ -19,11 +19,16 @@ import { Logo } from "@/components/landing/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
+// The docs live as a standalone, self-contained page. It is hosted off-site, so
+// this one opens in a new tab rather than routing within the app.
+const DOCS_URL = "https://claude.ai/code/artifact/7690a5f9-6e1c-48b0-b552-c7e59e2ad0e3";
+
 const LINKS = [
   { href: "/#how", label: "How it works" },
   { href: "/#proof", label: "Proof" },
   { href: "/#mechanism", label: "Mechanism" },
   { href: "/#faq", label: "FAQ" },
+  { href: DOCS_URL, label: "Docs", external: true },
 ] as const;
 
 export function Navbar() {
@@ -64,15 +69,27 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
-          {LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {LINKS.map((link) =>
+            "external" in link && link.external ? (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {link.label}
+              </Link>
+            ),
+          )}
         </nav>
 
         <div className="flex items-center gap-2">
@@ -95,16 +112,29 @@ export function Navbar() {
       {open ? (
         <div className="border-t border-border md:hidden">
           <nav className="mx-auto flex w-full max-w-6xl flex-col px-4 py-2 sm:px-6">
-            {LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="border-b border-border/60 py-3 text-sm text-muted-foreground last:border-b-0 hover:text-foreground"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {LINKS.map((link) =>
+              "external" in link && link.external ? (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setOpen(false)}
+                  className="border-b border-border/60 py-3 text-sm text-muted-foreground last:border-b-0 hover:text-foreground"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="border-b border-border/60 py-3 text-sm text-muted-foreground last:border-b-0 hover:text-foreground"
+                >
+                  {link.label}
+                </Link>
+              ),
+            )}
             <Button asChild size="sm" className="my-3 sm:hidden">
               <Link href="/dashboard" onClick={() => setOpen(false)}>
                 Live dashboard

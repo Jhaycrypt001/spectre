@@ -143,7 +143,7 @@ export function SettlementMath({ dispatch, settlement: s }: Props) {
         sign="equals"
         emphasis
         label="Paid to the household"
-        derivation="settled on Casper — recomputable from this event alone"
+        derivation="settled on Casper, recomputable from this event alone"
         value={formatCspr(s.paidCspr)}
         unit="CSPR"
       />

@@ -41,7 +41,7 @@ function describe(event: JsonMarketEvent): React.ReactNode {
     case "AssetRegistered":
       return (
         <>
-          <Ref>{event.assetId}</Ref> joined — up to{" "}
+          <Ref>{event.assetId}</Ref> joined, up to{" "}
           <Num>{formatWh(Number(event.maxCurtailableW))}</Num> W curtailable, owner{" "}
           <Mono title={event.owner}>{shortAddress(event.owner)}</Mono>
         </>
@@ -51,7 +51,7 @@ function describe(event: JsonMarketEvent): React.ReactNode {
         <>
           <Ref>{event.assetId}</Ref> committed a baseline hash{" "}
           <Mono title={event.commitment}>{truncateHex(event.commitment)}</Mono>{" "}
-          — locked before the window, revealed after
+          (locked before the window, revealed after)
         </>
       );
     case "EventOpened":
@@ -116,7 +116,7 @@ export function EventFeed({ log }: { log: JsonMarketEvent[] }) {
       <CardHeader>
         <CardTitle>On-chain event log</CardTitle>
         <CardDescription>
-          Every event the contract emitted, newest first — the receipts behind the
+          Every event the contract emitted, newest first: the receipts behind the
           stories above.
         </CardDescription>
       </CardHeader>

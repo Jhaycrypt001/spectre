@@ -35,7 +35,7 @@ const PANELS: readonly FeaturePanel[] = [
   },
   {
     caption: "The contract pays only what landed",
-    body: "Delivered reduction is adjusted baseline minus metered actual, capped at the pledge and clamped to ±20%. Multiply by price and you have the payout — arithmetic anyone can repeat from the settling event alone.",
+    body: "Delivered reduction is adjusted baseline minus metered actual, capped at the pledge and clamped to ±20%. Multiply by price and you have the payout: arithmetic anyone can repeat from the settling event alone.",
     icon: <Scale className={ICON} />,
     visual: <SettlementMathVisual />,
   },
@@ -46,7 +46,7 @@ export function HowItWorks() {
     <StickyFeatureSection
       id="how"
       title="An agent decides. The contract verifies."
-      description="The household side is autonomous — an agent reads prices, forecasts a baseline, and pledges only what it can shed without anyone noticing. The chain side is adversarial by design: it assumes the agent might lie, and settles on evidence."
+      description="The household side is autonomous: an agent reads prices, forecasts a baseline, and pledges only what it can shed without anyone noticing. The chain side is adversarial by design: it assumes the agent might lie, and settles on evidence."
       cta={{ label: "See it live", href: "/dashboard" }}
       panels={PANELS}
     />

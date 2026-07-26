@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Spectre — a verifiable market for demand reduction",
+  title: "Spectre · a verifiable market for demand reduction",
   description:
     "Autonomous agents pledge household demand reduction against live grid prices and settle sub-cent payouts on Casper, with every baseline and payout independently recomputable from chain data.",
 };

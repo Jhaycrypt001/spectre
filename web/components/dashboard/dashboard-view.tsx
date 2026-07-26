@@ -99,7 +99,7 @@ export function DashboardView() {
       </div>
 
       <section>
-        <SectionLabel>Settlement math — every figure recomputable from chain</SectionLabel>
+        <SectionLabel>Settlement math · every figure recomputable from chain</SectionLabel>
         <div className="flex flex-col gap-6">
           {settledDispatches.map((d) => (
             <DispatchCard key={d.eventId} dispatch={d} />
@@ -144,7 +144,7 @@ export function DashboardView() {
       <p className="pt-2 text-center text-xs text-muted-foreground/60">
         {status === "error" && data ? (
           <span className="text-destructive/80">
-            Showing last good read — refresh failed.{" "}
+            Showing last good read; refresh failed.{" "}
           </span>
         ) : null}
         Every number on this page is decoded from an event the contract emitted. Nothing

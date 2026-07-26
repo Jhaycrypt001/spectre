@@ -22,7 +22,7 @@ const STAGES = [
     key: "commit",
     label: "Commit",
     title: "A home locks its baseline before the window",
-    body: "The household agent hashes its expected consumption profile and writes only the hash on chain. The numbers stay private until settlement, and they can no longer be changed — which is what stops a home from inflating its baseline after the fact to claim a bigger reduction.",
+    body: "The household agent hashes its expected consumption profile and writes only the hash on chain. The numbers stay private until settlement, and they can no longer be changed, which is what stops a home from inflating its baseline after the fact to claim a bigger reduction.",
     artifact: {
       caption: "BaselineCommitted",
       rows: [
@@ -50,7 +50,7 @@ const STAGES = [
     key: "pledge",
     label: "Pledge",
     title: "Agents pledge what they can actually shed",
-    body: "Each home's agent decides how much load it can defer without hurting the household, and pledges that figure. The pledge is a ceiling on what it can be paid — deliver more and you are still paid for the pledge, so there is no reward for overstating.",
+    body: "Each home's agent decides how much load it can defer without hurting the household, and pledges that figure. The pledge is a ceiling on what it can be paid: deliver more and you are still paid for the pledge, so there is no reward for overstating.",
     artifact: {
       caption: "Pledged",
       rows: [
@@ -93,7 +93,7 @@ export function Hero() {
           <span className="relative inline-flex size-2 rounded-full bg-success" />
         </span>
         <span className="truncate text-muted-foreground">
-          Live on Casper testnet — settling real payouts
+          Live on Casper testnet · settling real payouts
         </span>
       </span>
 
@@ -103,7 +103,7 @@ export function Hero() {
       </h1>
 
       <p className="mt-6 max-w-2xl text-center text-lg leading-relaxed text-balance text-muted-foreground">
-        Spectre turns household demand reduction into something you can sell — and
+        Spectre turns household demand reduction into something you can sell, and
         proves every payout on chain, so it can be recomputed by anyone rather than
         trusted.
       </p>

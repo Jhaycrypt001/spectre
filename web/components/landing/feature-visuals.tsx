@@ -19,7 +19,7 @@ const WINDOW_CHROME = (
 export function AgentTerminalVisual() {
   const lines = [
     { dim: true, text: "Reading grid prices for 17:30–19:30..." },
-    { dim: true, text: "Price 2 CSPR/kWh — above 30-day median" },
+    { dim: true, text: "Price 2 CSPR/kWh: above 30-day median" },
     { dim: true, text: "Forecasting baseline from 14 days of history" },
     { dim: true, text: "Deferrable: water heater 1.2kW, EV 1.5kW" },
     { ok: true, text: "✓ Pledged 2,700 Wh within comfort limits" },

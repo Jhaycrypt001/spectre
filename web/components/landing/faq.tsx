@@ -15,7 +15,7 @@ import { SectionHeader } from "@/components/landing/section-header";
 const FAQS = [
   {
     q: "What exactly is a negawatt?",
-    a: "A watt that was going to be consumed and wasn't. When the grid is strained, reducing demand is physically equivalent to adding supply — but it's far cheaper and faster than firing up a peaker plant. The problem has always been proving a reduction happened, because you're measuring the absence of something. That proof is what Spectre builds.",
+    a: "A watt that was going to be consumed and wasn't. When the grid is strained, reducing demand is physically equivalent to adding supply, but it's far cheaper and faster than firing up a peaker plant. The problem has always been proving a reduction happened, because you're measuring the absence of something. That proof is what Spectre builds.",
   },
   {
     q: "How can you prove energy wasn't used?",
@@ -27,7 +27,7 @@ const FAQS = [
   },
   {
     q: "Who decides the baseline adjustment, and can it be abused?",
-    a: "Grid conditions on the day can legitimately shift what a home would have consumed — a heatwave changes everything. The contract accepts that adjustment but clamps it to ±20%, and records in the settling event both the adjustment applied and whether the clamp was binding. So the adjustment is bounded, and every use of it is visible in the log.",
+    a: "Grid conditions on the day can legitimately shift what a home would have consumed: a heatwave changes everything. The contract accepts that adjustment but clamps it to ±20%, and records in the settling event both the adjustment applied and whether the clamp was binding. So the adjustment is bounded, and every use of it is visible in the log.",
   },
   {
     q: "Where does the meter data come from?",
@@ -35,7 +35,7 @@ const FAQS = [
   },
   {
     q: "Does this website hold my funds or keys?",
-    a: "No. The frontend is strictly read-only — it fetches public events from the deployed contract and renders them. It holds no signing key and cannot move funds or change market state. You can verify that by reading the same events yourself on the Casper explorer.",
+    a: "No. The frontend is strictly read-only: it fetches public events from the deployed contract and renders them. It holds no signing key and cannot move funds or change market state. You can verify that by reading the same events yourself on the Casper explorer.",
   },
   {
     q: "Why Casper?",

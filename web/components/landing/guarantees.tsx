@@ -30,7 +30,7 @@ const GUARANTEES = [
   {
     icon: Wallet,
     title: "Budgets are escrowed, refunds are honest",
-    body: "The buyer's budget is locked in the contract before any home pledges against it. It can only ever pay for delivered reduction, and whatever the window does not spend is withdrawable by the buyer — never stranded, never overspent.",
+    body: "The buyer's budget is locked in the contract before any home pledges against it. It can only ever pay for delivered reduction, and whatever the window does not spend is withdrawable by the buyer: never stranded, never overspent.",
   },
   {
     icon: Eye,
@@ -56,7 +56,7 @@ export function Guarantees() {
           eyebrow="Guarantees"
           title="Not trust."
           accent="Arithmetic."
-          subtitle="Trusting Spectre is not the point — checking it is. These are properties the deployed contract enforces, each one visible in the events it emits."
+          subtitle="Trusting Spectre is not the point; checking it is. These are properties the deployed contract enforces, each one visible in the events it emits."
         />
 
         <div className="mt-14 grid divide-y divide-border overflow-hidden rounded-2xl border border-border sm:grid-cols-2 sm:divide-x lg:grid-cols-3">
