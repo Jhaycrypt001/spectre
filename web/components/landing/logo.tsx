@@ -1,43 +1,33 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Spectre mark: a power bolt cut by a reduction slash. The bolt is the load; the
- * slash is the negawatt — the unit of energy deliberately not consumed.
+ * Spectre mark: the angular "S" from the brand logo, framed on a rounded white chip.
+ *
+ * The source asset (public/brand/spectre-logo.png) is the full lockup — the S sits above
+ * a SPECTRE wordmark on white padding. We only want the S here (the wordmark is set as
+ * live text beside the mark), so the PNG is used as a background and the box is positioned
+ * over just the S: its bounding box is x 36.2–63.6%, y 25.3–61.0% of the 1254×1254 image.
+ *
+ * A white chip is deliberate: the mark is solid black, which would vanish on the dark
+ * theme, so it always rides on its own light tile — crisp and legible in both themes.
  */
 export function Logo({ className }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    <span
       aria-hidden
-      className={cn("size-6", className)}
-    >
-      <rect
-        x="0.75"
-        y="0.75"
-        width="22.5"
-        height="22.5"
-        rx="6.25"
-        className="fill-primary/10 stroke-primary/30"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M12.9 5.5 7.6 13.1h3.6l-.9 5.4 5.3-7.6h-3.6l.9-5.4Z"
-        className="fill-primary"
-      />
-      <path
-        d="M6 18.4 18 5.9"
-        className="stroke-background"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-      />
-      <path
-        d="M6 18.4 18 5.9"
-        className="stroke-primary"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-      />
-    </svg>
+      className={cn(
+        "block size-6 shrink-0 rounded-[6px] bg-white ring-1 ring-black/10 shadow-sm",
+        className,
+      )}
+      style={{
+        backgroundImage: "url(/brand/spectre-logo.png)",
+        // The S is ~27.4% wide / ~35.7% tall of the source. Zoom so it fills ~66% of the
+        // chip's height: 100% / 0.357 * 0.66 ≈ 185% along the tighter (vertical) axis.
+        backgroundSize: "auto 185%",
+        // Center of the S is at ~49.9% x, ~43.1% y of the image.
+        backgroundPosition: "49.9% 40%",
+        backgroundRepeat: "no-repeat",
+      }}
+    />
   );
 }

@@ -1,4 +1,5 @@
 <title>Spectre Docs — verifiable demand-reduction market on Casper</title>
+<link rel="icon" href="spectre-logo.png" type="image/png" />
 <style>
   :root {
     --bg: #ffffff;
@@ -71,14 +72,12 @@
   }
   .brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 640; letter-spacing: -0.01em; }
   .brand .glyph {
-    width: 1.4rem; height: 1.4rem; border-radius: 6px;
-    background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 55%, #000));
-    position: relative; flex: none;
+    width: 1.5rem; height: 1.5rem; border-radius: 6px; flex: none;
+    display: grid; place-items: center;
+    background: #ffffff; box-shadow: inset 0 0 0 1px #00000018, 0 1px 2px #0000000f;
   }
-  .brand .glyph::after {
-    content: ""; position: absolute; inset: 0; border-radius: 6px;
-    box-shadow: inset 0 0 0 1px #ffffff33;
-  }
+  .brand .glyph svg { width: 68%; height: 68%; display: block; }
+  .brand .glyph svg path { fill: #0b0b0d; }
   .brand small { color: var(--muted); font-weight: 500; letter-spacing: 0.02em; }
   .topbar-links { display: flex; align-items: center; gap: 0.35rem; }
   .topbar-links a, .theme-btn {
@@ -187,7 +186,12 @@
 
 <header class="topbar">
   <div class="brand">
-    <span class="glyph" aria-hidden="true"></span>
+    <span class="glyph" aria-hidden="true">
+      <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
+        <!-- Angular "S": two offset slabs meeting at a diagonal waist, echoing the brand mark. -->
+        <path d="M97 6 L97 44 Q97 62 74 64 L36 68 Q30 69 30 74 L30 88 L3 88 L3 62 Q3 44 26 42 L64 38 Q70 37 70 32 L70 18 L38 22 L38 6 Z" />
+      </svg>
+    </span>
     Spectre <small>docs</small>
   </div>
   <div class="topbar-links">
