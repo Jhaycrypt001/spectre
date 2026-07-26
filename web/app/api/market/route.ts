@@ -80,10 +80,14 @@ export async function GET(request: NextRequest) {
       headers: { "x-spectre-cache": fresh ? "bypass" : "miss" },
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error("[/api/market] chain read failed:", message);
+    const raw = error instanceof Error ? error.message : String(error);
+    // Full message (which can include internal URLs or a stack's first line) goes to
+    // the server log only. The public response carries just the first line, capped,
+    // so the dashboard can show *something* actionable without over-sharing internals.
+    console.error("[/api/market] chain read failed:", raw);
+    const detail = raw.split("\n", 1)[0].slice(0, 200);
     return NextResponse.json(
-      { error: "Failed to read market state from chain.", detail: message },
+      { error: "Failed to read market state from chain.", detail },
       { status: 502 },
     );
   }
